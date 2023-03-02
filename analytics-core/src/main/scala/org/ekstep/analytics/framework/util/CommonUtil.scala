@@ -731,6 +731,14 @@ object CommonUtil {
     connProperties
   }
 
+  def getOCIFile(region: String, compartment: String, bucket: String, file: String): String = {
+    "https://objectstorage." + region + ".oraclecloud.com/n/" + compartment + "/b/" + bucket + "/" + file;
+  }
+  
+  def getOCIFileWithoutPrefix(bucket: String, file: String): String = {
+    bucket + "/" + file;
+  }
+
   def getS3File(bucket: String, file: String): String = {
     "s3n://" + bucket + "/" + file;
   }
