@@ -49,6 +49,8 @@ class DatasetExt(df: Dataset[Row]) {
         CommonUtil.getAzureFileWithoutPrefix(storageConfig.container, storageConfig.fileName, storageConfig.accountKey.getOrElse("azure_storage_key"))
       case "gcloud" =>
         CommonUtil.getGCloudFileWithoutPrefix(storageConfig.container, storageConfig.fileName);
+      case "oci" =>
+        CommonUtil.getOCIFileWithoutPrefix(storageConfig.container, storageConfig.fileName);
       case _ =>
         storageConfig.fileName
     }
@@ -60,6 +62,8 @@ class DatasetExt(df: Dataset[Row]) {
         "wasb://"
       case "gcloud" =>
         "gs://"
+      case "oci" =>
+        "oci://"
       case _ =>
         ""
     }

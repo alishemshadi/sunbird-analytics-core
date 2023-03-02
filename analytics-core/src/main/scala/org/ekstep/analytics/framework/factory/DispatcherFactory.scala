@@ -33,6 +33,8 @@ object DispatcherFactory {
                 ESDispatcher;
             case "gcloud" =>
                 GcloudDispatcher;
+            case "oci" =>
+                OCIDispatcher;
             case _ =>
                 throw new DispatcherException("Unknown output dispatcher destination found");
         }
@@ -49,6 +51,8 @@ object DispatcherFactory {
                 AzureDispatcher;
             case "gcloud" =>
                 GcloudDispatcher;
+            case "oci" =>
+                OCIDispatcher;
             case _ =>
                 throw new DispatcherException("Unknown output dispatcher destination found");
         }

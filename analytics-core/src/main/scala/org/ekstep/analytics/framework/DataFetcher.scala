@@ -6,7 +6,7 @@ import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.dstream.DStream
 import org.ekstep.analytics.framework.Level.INFO
 import org.ekstep.analytics.framework.exception.DataFetcherException
-import org.ekstep.analytics.framework.fetcher.{AzureDataFetcher, DruidDataFetcher, S3DataFetcher, CephS3DataFetcher, GcloudDataFetcher}
+import org.ekstep.analytics.framework.fetcher.{AzureDataFetcher, DruidDataFetcher, S3DataFetcher, CephS3DataFetcher, GcloudDataFetcher, OCIDataFetcher}
 import org.ekstep.analytics.framework.util.{CommonUtil, JSONUtils, JobLogger}
 
 /**

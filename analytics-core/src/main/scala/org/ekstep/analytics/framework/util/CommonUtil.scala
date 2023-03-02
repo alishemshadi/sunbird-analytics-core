@@ -94,6 +94,7 @@ object CommonUtil {
     setS3Conf(sc)
     setAzureConf(sc)
     setGcloudConf(sc)
+    setOCIConf(sc)
     JobLogger.log("Spark Context initialized")
     sc
   }
@@ -147,6 +148,7 @@ object CommonUtil {
     setS3Conf(sparkSession.sparkContext)
     setAzureConf(sparkSession.sparkContext)
     setGcloudConf(sparkSession.sparkContext)
+    setOCIConf(sparkSession.sparkContext)
     JobLogger.log("SparkSession initialized")
     sparkSession
   }
@@ -176,6 +178,17 @@ object CommonUtil {
     sc.hadoopConfiguration.set("fs.gs.auth.service.account.email", AppConf.getStorageKey("gcloud"))
     sc.hadoopConfiguration.set("fs.gs.auth.service.account.private.key", AppConf.getStorageSecret("gcloud"))
     sc.hadoopConfiguration.set("fs.gs.auth.service.account.private.key.id", AppConf.getConfig("gcloud_private_secret_id"))
+  }
+
+  def setOCIConf(sc: SparkContext) = { // using the same style as s3, may need to update this part
+    JobLogger.log("Configuring OCI AccessKey& SecrateKey to SparkContext - Using same keys as S3 ")
+    sc.hadoopConfiguration.set("fs.s3n.awsAccessKeyId", AppConf.getAwsKey());
+    sc.hadoopConfiguration.set("fs.s3n.awsSecretAccessKey", AppConf.getAwsSecret());
+
+    val storageEndpoint = AppConf.getConfig("cloud_storage_endpoint")
+    if (!"".equalsIgnoreCase(storageEndpoint)) {
+      sc.hadoopConfiguration.set("fs.s3n.endpoint", storageEndpoint)
+    }
   }
 
   def closeSparkContext()(implicit sc: SparkContext) {
@@ -731,14 +744,6 @@ object CommonUtil {
     connProperties
   }
 
-  def getOCIFile(region: String, compartment: String, bucket: String, file: String): String = {
-    "https://objectstorage." + region + ".oraclecloud.com/n/" + compartment + "/b/" + bucket + "/" + file;
-  }
-  
-  def getOCIFileWithoutPrefix(bucket: String, file: String): String = {
-    bucket + "/" + file;
-  }
-
   def getS3File(bucket: String, file: String): String = {
     "s3n://" + bucket + "/" + file;
   }
@@ -763,6 +768,14 @@ object CommonUtil {
     bucket + "/" + file;
   }
 
+  def getOCIFile(region: String, compartment: String, bucket: String, file: String): String = {
+    "https://objectstorage." + region + ".oraclecloud.com/n/" + compartment + "/b/" + bucket + "/" + file;
+  }
+  
+  def getOCIFileWithoutPrefix(bucket: String, file: String): String = {
+    bucket + "/" + file;
+  }
+
   def setStorageConf(store: String, accountKey: Option[String], accountSecret: Option[String])(implicit sc: SparkContext): Configuration = {
     store.toLowerCase() match {
       case "s3" =>
@@ -778,8 +791,8 @@ object CommonUtil {
         sc.hadoopConfiguration.set("fs.gs.auth.service.account.private.key", AppConf.getStorageSecret("gcloud"))
         sc.hadoopConfiguration.set("fs.gs.auth.service.account.private.key.id", AppConf.getConfig("gcloud_private_secret_id"))
       case "oci" => // temporarily using aws style access keys with storage keys, may need to update this part later
-        sc.hadoopConfiguration.set("fs.s3n.awsAccessKeyId", AppConf.getConfig(accountKey.getOrElse("aws_storage_key")));
-        sc.hadoopConfiguration.set("fs.s3n.awsSecretAccessKey", AppConf.getConfig(accountSecret.getOrElse("aws_storage_secret")));
+        sc.hadoopConfiguration.set("fs.oci.ociAccessKeyId", AppConf.getConfig(accountKey.getOrElse("oci_storage_key")));
+        sc.hadoopConfiguration.set("fs.oci.ociSecretAccessKey", AppConf.getConfig(accountSecret.getOrElse("oci_storage_secret")));
       case _ =>
       // Do nothing
     }
@@ -807,6 +820,8 @@ object CommonUtil {
         //TODO - Need to support the GCP As well.
         throw new Exception("gcp is currently not supported.")
       // $COVERAGE-ON$
+      case "oci" =>
+        getOCIFile(bucket, filePath)
     }
   }
 }

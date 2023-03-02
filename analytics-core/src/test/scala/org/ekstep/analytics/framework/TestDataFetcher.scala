@@ -7,6 +7,7 @@ import org.scalatest.Matchers
 import org.sunbird.cloud.storage.BaseStorageService
 import org.ekstep.analytics.framework.fetcher.S3DataFetcher
 import org.ekstep.analytics.framework.fetcher.AzureDataFetcher
+import org.ekstep.analytics.framework.fetcher.OCIDataFetcher
 
 /**
  * @author Santhosh
