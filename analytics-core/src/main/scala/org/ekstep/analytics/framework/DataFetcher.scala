@@ -48,6 +48,9 @@ object DataFetcher {
                 val druidDataList = data.map(f => JSONUtils.deserialize[T](f))
                 return druidDataList
             // $COVERAGE-ON$
+            case "oci" =>
+                JobLogger.log("Fetching the batch data from S3")
+                OCIDataFetcher.getObjectKeys(search.queries.get);
             case _ =>
                 throw new DataFetcherException("Unknown fetcher type found");
         }
