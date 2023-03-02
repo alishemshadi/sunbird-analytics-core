@@ -821,7 +821,7 @@ object CommonUtil {
         throw new Exception("gcp is currently not supported.")
       // $COVERAGE-ON$
       case "oci" =>
-        getOCIFile(bucket, filePath)
+        getOCIFile(AppConf.getConfig(accountKey.getOrElse("oci_storage_region"), AppConf.getConfig(accountKey.getOrElse("oci_storage_compartment"), bucket, filePath)
     }
   }
 }
