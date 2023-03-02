@@ -27,7 +27,7 @@ node('build-slave') {
         
         stage('Build') {
             sh '''
-                export JAVA_HOME=/usr/lib/jvm/jdk-11.0.2
+                export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-11.0.16.1.1-1.0.1.el7_9.x86_64
                 export PATH=$JAVA_HOME/bin:$PATH
                 echo $(java -version)
                 mvn clean install -DskipTests
